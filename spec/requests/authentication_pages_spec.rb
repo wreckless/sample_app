@@ -7,8 +7,13 @@ describe "Authentication" do
   describe "signin page" do
     before { visit signin_path }
 
-    it { should have_content('Sign in') }
-    it { should have_title('Sign in') }
+    it { should have_content('Sign up') }
+    it { should have_title('Sign up') }
+
+    it { should_not have_link('Users',       href: users_path) }
+    it { should_not have_link('Profile') }
+    it { should_not have_link('Settings') }
+    it { should_not have_link('Sign out',    href: signout_path) }
   end
 
   describe "signin" do
@@ -17,7 +22,7 @@ describe "Authentication" do
     describe "with invalid information" do
       before { click_button "Sign in" }
 
-      it { should have_title('Sign in') }
+      it { should have_title('Sign up') }
       it { should have_error_message('Invalid') }
     
       describe "after visiting another page" do
@@ -57,10 +62,23 @@ describe "Authentication" do
             click_button "Sign in"
           end
 
-          describe "after signing in" do
-
+          describe "after signing up" do
             it "should render the desired protected page" do
               expect(page).to have_title('Edit user')
+            end
+          end
+
+          describe "when signing in again" do
+            before do
+              delete signout_path
+              visit signin_path
+              fill_in "Email",    with: user.email
+              fill_in "Password", with: user.password
+              click_button "Sign in"
+            end
+
+            it "should render the default (profile) page" do
+              expect(page).to have_title(user.name) 
             end
           end
         end
@@ -69,7 +87,7 @@ describe "Authentication" do
 
           describe "visiting the edit page" do
             before { visit edit_user_path(user) }
-            it { should have_title('Sign in') }
+            it { should have_title('Sign up') }
           end
 
           describe "submitting to the update action" do
@@ -79,7 +97,7 @@ describe "Authentication" do
 
           describe "visiting the user index" do
             before { visit users_path }
-            it { should have_title('Sign in') }
+            it { should have_title('Sign up') }
           end
 
         end

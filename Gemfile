@@ -30,6 +30,11 @@ group :test do
   gem 'selenium-webdriver', '2.0'
   gem 'capybara', '2.1.0.beta1'
   gem 'factory_girl_rails', '4.2.0'
+
+  # Uncomment these lines on OS X.
+  gem 'rb-fsevent', '0.9.3', :require => false
+  gem 'growl', '1.0.3'
+
 end
 
 group :assets do
